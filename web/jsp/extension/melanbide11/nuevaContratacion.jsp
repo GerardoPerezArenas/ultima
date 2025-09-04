@@ -2455,8 +2455,8 @@ this                    this.base.style.height = this.view.style.height = (alto 
                 listaDescripcionesTitReqPuesto[0] = "";
                 contador = 0;
                 <logic:iterate id="titReqPuesto" name="listaTitReqPuesto" scope="request">
-                    listaCodigosTitReqPuesto[contador] = '<bean:write name="titReqPuesto" property="codigo" />';
-                    listaDescripcionesTitReqPuesto[contador] = '<bean:write name="titReqPuesto" property="descripcion" />';
+                    listaCodigosTitReqPuesto[contador] = '<bean:write name="titReqPuesto" property="des_val_cod" />';
+                    listaDescripcionesTitReqPuesto[contador] = '<bean:write name="titReqPuesto" property="des_nom" />';
                     contador++;
                 </logic:iterate>
                 comboListaTitReqPuesto = new Combo("ListaTitReqPuesto");
