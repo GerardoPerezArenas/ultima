@@ -93,10 +93,10 @@
         <script type="text/javascript" src="<c:url value='/scripts/calendario.js'/>"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/validaciones.js"></script>
         <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/popup.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/meLanbide11/JavaScriptUtil.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/meLanbide11/Parsers.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/meLanbide11/InputMask.js"></script>
-        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/meLanbide11/lanbide.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/melanbide11/JavaScriptUtil.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/melanbide11/Parsers.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/melanbide11/InputMask.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/extension/melanbide11/lanbide.js"></script>
         <!-- listaComboBox modificado para que busque sin tener en cuenta las tildes -->
         <script type="text/javascript">
          var APP_CONTEXT_PATH = '<%=request.getContextPath()%>';
@@ -169,7 +169,7 @@
                 this.i_codigos = new Array();
                 this.i_items = new Array();
 
-                //Creamos la vista del combo, que será un DIV que incluirá la tabla con los elementos de la lista.
+                //Creamos la vista del combo, que serï¿½ un DIV que incluirï¿½ la tabla con los elementos de la lista.
                 this.base = document.createElement("DIV");
                 this.base.combo = this;
                 this.base.style.position = 'absolute';
@@ -241,7 +241,7 @@
                     var rowID = 1;
 
                     if (!!navigator.userAgent.match(/Trident.*rv[ :]*11\./) || navigator.appName.indexOf("Internet Explorer") != -1) {
-                        // Se calcula la posición de item del combo que ha sido seleccionado
+                        // Se calcula la posiciï¿½n de item del combo que ha sido seleccionado
                         var i = padre.parentElement.sourceIndex;
                         var j = padre.sourceIndex;
                         rowID = (j - i - 1);
@@ -249,7 +249,7 @@
                     } else {
                         // Firefox u otro navegador
 
-                        /** Se obtiene el valor del item de menú seleccionado, para a partir de él, obtener la posición en el combo y seleccionar dicha fila **/
+                        /** Se obtiene el valor del item de menï¿½ seleccionado, para a partir de ï¿½l, obtener la posiciï¿½n en el combo y seleccionar dicha fila **/
                         var hijos = padre.childNodes;
                         var valorFilaSeleccionada = "";
                         if (hijos != null) {
@@ -266,7 +266,7 @@
                                 }
                             }
                         }
-                        // En z está la posición de la fila seleccionada por el usuario
+                        // En z estï¿½ la posiciï¿½n de la fila seleccionada por el usuario
                         rowID = z;
                     }// else       
 
@@ -561,7 +561,7 @@ var contenidoPantalla = document.getElementsByClassName("contenidoPantalla")[0];
                         this.selectItem(i);
                     } else {
                         if (this.des.readOnly)
-                            jsp_alerta('A', 'Código inexistente');
+                            jsp_alerta('A', 'Cï¿½digo inexistente');
                         this.selectItem(-1);
                         return false;
                     }
@@ -609,11 +609,11 @@ var contenidoPantalla = document.getElementsByClassName("contenidoPantalla")[0];
             }
 
             function quitarTildes(st) {
-                st = st.replace(new RegExp(/[àáâãäå]/g), "a");
-                st = st.replace(new RegExp(/[èéêë]/g), "e");
-                st = st.replace(new RegExp(/[ìíîï]/g), "i");
-                st = st.replace(new RegExp(/[òóôõö]/g), "o");
-                st = st.replace(new RegExp(/[ùúûü]/g), "u");
+                st = st.replace(new RegExp(/[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]/g), "a");
+                st = st.replace(new RegExp(/[ï¿½ï¿½ï¿½ï¿½]/g), "e");
+                st = st.replace(new RegExp(/[ï¿½ï¿½ï¿½ï¿½]/g), "i");
+                st = st.replace(new RegExp(/[ï¿½ï¿½ï¿½ï¿½ï¿½]/g), "o");
+                st = st.replace(new RegExp(/[ï¿½ï¿½ï¿½ï¿½]/g), "u");
 
                 return st;
             }
@@ -645,7 +645,7 @@ var contenidoPantalla = document.getElementsByClassName("contenidoPantalla")[0];
                 var novoCodigos = [];
 
                 for (var i = 0; i < this.items.length; i++) {
-                    // se fuerza a que sea string (en el pantallaCatalogacion.jsp de catalogación no hizo falta)
+                    // se fuerza a que sea string (en el pantallaCatalogacion.jsp de catalogaciï¿½n no hizo falta)
                     var itemTemp = this.items[i].toString().toLowerCase();
                     itemTemp = quitarTildes(itemTemp).toUpperCase();
                     //if (this.items[i].toString().toUpperCase().indexOf(this.des.introducido.toUpperCase()) >= 0) {
@@ -698,7 +698,7 @@ var contenidoPantalla = document.getElementsByClassName("contenidoPantalla")[0];
             }
 
 //********************************************************** //
-// Calculamos el tamaño y posicion que tendrá el Combo.      //
+// Calculamos el tamaï¿½o y posicion que tendrï¿½ el Combo.      //
 //***********************************************************//
             function CB_resize() {
 
@@ -1250,7 +1250,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                     var nombre = v('nombre'); nombre = nombre ? safeReplaceQuotes(nombre) : "";
                     var apellido1 = v('apellido1'); apellido1 = apellido1 ? safeReplaceQuotes(apellido1) : "";
                     var apellido2 = v('apellido2'); apellido2 = apellido2 ? safeReplaceQuotes(apellido2) : "";
-                    var funciones = v('funciones'); funciones = funciones ? safeReplaceQuotes(funciones) : ""; // máx 200 (validado fuera)
+                    var funciones = v('funciones'); funciones = funciones ? safeReplaceQuotes(funciones) : ""; // mï¿½x 200 (validado fuera)
 
                     if (nuevo != null && nuevo == "1") {
                                     parametros = "tarea=preparar&modulo=MELANBIDE11&operacion=crearNuevaContratacion&tipo=0"
@@ -1272,7 +1272,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                             + "&puesto=" + encodeURIComponent(v('puesto'))
                             + "&ocupacion=" + v('codListaOcupacion')
                             + "&desOcupacionLibre=" + encodeURIComponent(v('desOcupacionLibre'))
-                            // Históricos: si no están en el DOM, enviamos vacío sin romper
+                            // Histï¿½ricos: si no estï¿½n en el DOM, enviamos vacï¿½o sin romper
                             + "&desTitulacionLibre=" + v('desTitulacionLibre')
                             + "&titulacion=" + v('codListaTitulacion')
                             + "&cProfesionalidad=" + v('codListaCProfesionalidad')
@@ -1313,7 +1313,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                                 + "&puesto=" + encodeURIComponent(v('puesto'))
                                 + "&ocupacion=" + v('codListaOcupacion')
                                 + "&desOcupacionLibre=" + encodeURIComponent(v('desOcupacionLibre'))
-                                // Históricos (solo consulta): enviamos vacío si no existen
+                                // Histï¿½ricos (solo consulta): enviamos vacï¿½o si no existen
                                 + "&desTitulacionLibre=" + v('desTitulacionLibre')
                                 + "&titulacion=" + v('codListaTitulacion')
                                 + "&cProfesionalidad=" + v('codListaCProfesionalidad')
@@ -1347,12 +1347,12 @@ this                    this.base.style.height = this.view.style.height = (alto 
                                 var text = ajax.responseText; xmlDoc = new ActiveXObject("Microsoft.XMLDOM"); xmlDoc.async = "false"; xmlDoc.loadXML(text);
                             } else { xmlDoc = ajax.responseXML; }
                             if (!xmlDoc || !xmlDoc.documentElement) {
-                                alert('Error: la respuesta del servidor no es válida. Intente de nuevo o contacte soporte.');
+                                alert('Error: la respuesta del servidor no es vï¿½lida. Intente de nuevo o contacte soporte.');
                                 return;
                             }
                             nodos = xmlDoc.getElementsByTagName("RESPUESTA");
                             if (!nodos || !nodos[0]) {
-                                alert('Error: no se recibió respuesta válida del servidor.');
+                                alert('Error: no se recibiï¿½ respuesta vï¿½lida del servidor.');
                                 return;
                             }
                             var elemento = nodos[0]; var hijos = elemento.childNodes; var codigoOperacion = null; var lista = new Array();
@@ -1401,7 +1401,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                                 }
                             }
                         } else {
-                            alert('Error de comunicación con el servidor.');
+                            alert('Error de comunicaciï¿½n con el servidor.');
                             return;
                         }
                         if (codigoOperacion == "0") { self.parent.opener.retornoXanelaAuxiliar(lista); cerrarVentana(); }
@@ -1658,7 +1658,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                  return false;
                  }*/
                 // =============================
-    // NUEVO: Validación FUNCIONES (máximo 200)
+    // NUEVO: Validaciï¿½n FUNCIONES (mï¿½ximo 200)
     // =============================
     var funcionesEl = document.getElementById('funciones');
     if (funcionesEl && funcionesEl.value && funcionesEl.value.length > 200) {
@@ -1669,7 +1669,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
     // =============================
     // NUEVO: Lectura TITREQPUESTO (no obligatorio, como JORN)
     // =============================
-    // Soporte doble: patrón legacy (codListaTitReqPuesto) o <select id="titReqPuesto">
+    // Soporte doble: patrï¿½n legacy (codListaTitReqPuesto) o <select id="titReqPuesto">
     var titReqPuesto = '';
     var elTitReq1 = document.getElementById('codListaTitReqPuesto');
     if (elTitReq1) { titReqPuesto = elTitReq1.value; }
@@ -2045,7 +2045,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
                             </div>
                         </div>
                     </div>
-                    <!-- TODO histórico: TITULACION y DESTITULACION
+                    <!-- TODO histï¿½rico: TITULACION y DESTITULACION
                     <div class="lineaFormulario">
                         <div style="width: 250px; float: left;" class="etiqueta">
                             <%=meLanbide11I18n.getMensaje(idiomaUsuario,"label.desTitulacionLibre")%>
@@ -2090,7 +2090,7 @@ this                    this.base.style.height = this.view.style.height = (alto 
 </div>
 <br><br>
 
-<!-- Desplegable TITREQPUESTO (patrón legacy: código + descripción + ancla) -->
+<!-- Desplegable TITREQPUESTO (patrï¿½n legacy: cï¿½digo + descripciï¿½n + ancla) -->
 <div class="lineaFormulario">
   <div class="etiqueta" style="width: 250px; float: left;">
     <%=meLanbide11I18n.getMensaje(idiomaUsuario,"contrataciones.titreqpuesto.label")%>
