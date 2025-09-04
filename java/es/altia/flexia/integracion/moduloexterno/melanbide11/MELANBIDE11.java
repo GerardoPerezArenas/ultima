@@ -161,8 +161,8 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
             List<DesplegableAdmonLocalVO> listaTitReqPuesto = MeLanbide11Manager.getInstance().getValoresDesplegablesAdmonLocalxdes_cod(ConfigurationParameter.getParameter(ConstantesMeLanbide11.COD_DES_TITREQPUESTO, ConstantesMeLanbide11.FICHERO_PROPIEDADES), this.getAdaptSQLBD(String.valueOf(codOrganizacion)));
             if (listaTitReqPuesto.size() > 0) {
                 listaTitReqPuesto = traducirDesplegable(request, listaTitReqPuesto);
-                request.setAttribute("listaTitReqPuesto", listaTitReqPuesto);
             }
+            request.setAttribute("listaTitReqPuesto", listaTitReqPuesto);
             List<DesplegableAdmonLocalVO> listaGrupoCotizacion = MeLanbide11Manager.getInstance().getValoresDesplegablesAdmonLocalxdes_cod(ConfigurationParameter.getParameter(ConstantesMeLanbide11.COD_DES_GCOT, ConstantesMeLanbide11.FICHERO_PROPIEDADES), this.getAdaptSQLBD(String.valueOf(codOrganizacion)));
             if (listaGrupoCotizacion.size() > 0) {
                 listaGrupoCotizacion = traducirDesplegable(request, listaGrupoCotizacion);
@@ -249,8 +249,8 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
             List<DesplegableAdmonLocalVO> listaTitReqPuesto = MeLanbide11Manager.getInstance().getValoresDesplegablesAdmonLocalxdes_cod(ConfigurationParameter.getParameter(ConstantesMeLanbide11.COD_DES_TITREQPUESTO, ConstantesMeLanbide11.FICHERO_PROPIEDADES), this.getAdaptSQLBD(String.valueOf(codOrganizacion)));
             if (listaTitReqPuesto.size() > 0) {
                 listaTitReqPuesto = traducirDesplegable(request, listaTitReqPuesto);
-                request.setAttribute("listaTitReqPuesto", listaTitReqPuesto);
             }
+            request.setAttribute("listaTitReqPuesto", listaTitReqPuesto);
             List<DesplegableAdmonLocalVO> listaGrupoCotizacion = MeLanbide11Manager.getInstance().getValoresDesplegablesAdmonLocalxdes_cod(ConfigurationParameter.getParameter(ConstantesMeLanbide11.COD_DES_GCOT, ConstantesMeLanbide11.FICHERO_PROPIEDADES), this.getAdaptSQLBD(String.valueOf(codOrganizacion)));
             if (listaGrupoCotizacion.size() > 0) {
                 listaGrupoCotizacion = traducirDesplegable(request, listaGrupoCotizacion);
@@ -368,7 +368,7 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
             String fechaFin = (String) request.getParameter("fechaFin");
             String mesesContrato = (String) request.getParameter("mesesContrato");
 
-            // --- Normalización y validación de parámetros numéricos y texto ---
+            // --- Normalizaciï¿½n y validaciï¿½n de parï¿½metros numï¿½ricos y texto ---
             String grupoCotizacion = request.getParameter("grupoCotizacion");
             grupoCotizacion = (grupoCotizacion != null && !grupoCotizacion.trim().isEmpty()) ? grupoCotizacion.trim() : null;
 
@@ -388,7 +388,7 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
             String importeSub = (importeSubParam != null && !importeSubParam.trim().isEmpty()) ? importeSubParam.trim().replace(",", ".") : null;
 
             // --- Nuevos campos TITREQPUESTO y FUNCIONES ---
-            String titReqPuesto = request.getParameter("titReqPuesto"); // código del combo
+            String titReqPuesto = request.getParameter("titReqPuesto"); // cï¿½digo del combo
             titReqPuesto = (titReqPuesto != null && !titReqPuesto.trim().isEmpty()) ? titReqPuesto.trim() : null;
 
             String funciones = request.getParameter("funciones");
@@ -726,7 +726,7 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
                     try {
                         lista = MeLanbide11Manager.getInstance().getDatosMinimis(numExp, codOrganizacion, adapt);
                     } catch (Exception ex) {
-                        log.debug("Error al recuperar la lista de minimis después de eliminar una minimis");
+                        log.debug("Error al recuperar la lista de minimis despuï¿½s de eliminar una minimis");
                     }
                 }
             }
@@ -834,10 +834,10 @@ public class MELANBIDE11 extends ModuloIntegracionExterno {
                         lista = meLanbide11Manager.getDatosMinimis(numExp, codOrganizacion, adapt);
                     } catch (BDException bde) {
                         codigoOperacion = "1";
-                        log.debug("Error de tipo BD al recuperar la lista de minimis después de modificar una minimis : " + bde.getMensaje());
+                        log.debug("Error de tipo BD al recuperar la lista de minimis despuï¿½s de modificar una minimis : " + bde.getMensaje());
                     } catch (Exception ex) {
                         codigoOperacion = "2";
-                        log.debug("Error al recuperar la lista de minimis después de modificar una minimis : " + ex.getMessage());
+                        log.debug("Error al recuperar la lista de minimis despuï¿½s de modificar una minimis : " + ex.getMessage());
                     }
                 } else {
                     codigoOperacion = "2";
