@@ -48,9 +48,14 @@ public class MeLanbide11DAO {
         List<ContratacionVO> lista = new ArrayList<ContratacionVO>();
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " WHERE NUM_EXP ='" + numExp + "'"
+            // Validar y escapar el número de expediente para evitar SQL injection
+            if (numExp == null) {
+                throw new IllegalArgumentException("Número de expediente no puede ser nulo");
+            }
+            
+            String safeNumExp = numExp.replace("'", "''");
+            String query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
+                    + " WHERE NUM_EXP ='" + safeNumExp + "'"
                     + " ORDER BY ID";
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
@@ -86,9 +91,14 @@ public class MeLanbide11DAO {
         List<ContratacionVO> lista = new ArrayList<ContratacionVO>();
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "Select * From " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES) + " A "
-                    + "Where A.Num_Exp= '" + numExp + "' Order By A.Id";
+            // Validar y escapar el número de expediente para evitar SQL injection
+            if (numExp == null) {
+                throw new IllegalArgumentException("Número de expediente no puede ser nulo");
+            }
+            
+            String safeNumExp = numExp.replace("'", "''");
+            String query = "Select * From " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES) + " A "
+                    + "Where A.Num_Exp= '" + safeNumExp + "' Order By A.Id";
             if (log.isDebugEnabled()) {
                 log.debug("sql getContratacion= " + query);
             }
@@ -122,9 +132,14 @@ public class MeLanbide11DAO {
         ResultSet rs = null;
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " WHERE ID=" + (id != null && !id.equals("") ? id : "null");
+            // Validar y escapar el ID para evitar SQL injection
+            if (id == null || id.trim().equals("")) {
+                throw new IllegalArgumentException("ID de contratación no puede ser nulo o vacío");
+            }
+            
+            String safeId = id.replace("'", "''");
+            String query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
+                    + " WHERE ID='" + safeId + "'";
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
             }
