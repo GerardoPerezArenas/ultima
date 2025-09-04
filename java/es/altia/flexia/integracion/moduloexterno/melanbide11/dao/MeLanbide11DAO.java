@@ -48,9 +48,14 @@ public class MeLanbide11DAO {
         List<ContratacionVO> lista = new ArrayList<ContratacionVO>();
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " WHERE NUM_EXP ='" + numExp + "'"
+            // Validar y escapar el número de expediente para evitar SQL injection
+            if (numExp == null) {
+                throw new IllegalArgumentException("Número de expediente no puede ser nulo");
+            }
+            
+            String safeNumExp = numExp.replace("'", "''");
+            String query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
+                    + " WHERE NUM_EXP ='" + safeNumExp + "'"
                     + " ORDER BY ID";
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
@@ -86,9 +91,14 @@ public class MeLanbide11DAO {
         List<ContratacionVO> lista = new ArrayList<ContratacionVO>();
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "Select * From " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES) + " A "
-                    + "Where A.Num_Exp= '" + numExp + "' Order By A.Id";
+            // Validar y escapar el número de expediente para evitar SQL injection
+            if (numExp == null) {
+                throw new IllegalArgumentException("Número de expediente no puede ser nulo");
+            }
+            
+            String safeNumExp = numExp.replace("'", "''");
+            String query = "Select * From " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES) + " A "
+                    + "Where A.Num_Exp= '" + safeNumExp + "' Order By A.Id";
             if (log.isDebugEnabled()) {
                 log.debug("sql getContratacion= " + query);
             }
@@ -122,9 +132,14 @@ public class MeLanbide11DAO {
         ResultSet rs = null;
         ContratacionVO contratacion = new ContratacionVO();
         try {
-            String query = null;
-            query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " WHERE ID=" + (id != null && !id.equals("") ? id : "null");
+            // Validar y escapar el ID para evitar SQL injection
+            if (id == null || id.trim().equals("")) {
+                throw new IllegalArgumentException("ID de contratación no puede ser nulo o vacío");
+            }
+            
+            String safeId = id.replace("'", "''");
+            String query = "SELECT * FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
+                    + " WHERE ID='" + safeId + "'";
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
             }
@@ -153,9 +168,16 @@ public class MeLanbide11DAO {
     public int eliminarContratacion(String id, Connection con) throws Exception {
         Statement st = null;
         try {
-            String query = null;
-            query = "DELETE FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " WHERE ID=" + (id != null && !id.equals("") ? id : "null");
+            // Validar y escapar el ID para evitar SQL injection
+            if (id == null || id.trim().equals("")) {
+                throw new IllegalArgumentException("ID de contratación no puede ser nulo o vacío");
+            }
+            
+            // Escapar comillas simples en el ID
+            String safeId = id.replace("'", "''");
+            
+            String query = "DELETE FROM " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
+                    + " WHERE ID='" + safeId + "'";
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
             }
@@ -166,7 +188,7 @@ public class MeLanbide11DAO {
             throw new Exception(ex);
         } finally {
             if (log.isDebugEnabled()) {
-                log.debug("Procedemos a cerrar el statement y el resultset");
+                log.debug("Procedemos a cerrar el statement");
             }
             if (st != null) {
                 st.close();
@@ -176,11 +198,15 @@ public class MeLanbide11DAO {
 
     public boolean crearNuevaContratacion(ContratacionVO nuevaContratacion, Connection con) throws Exception {
         Statement st = null;
-        //boolean opeCorrecta = true;
         String query = "";
         String fechaNacimiento = "";
         String fechaInicio = "";
         String fechaFin = "";
+        
+        if (nuevaContratacion == null) {
+            throw new IllegalArgumentException("Datos de nueva contratación no pueden ser nulos");
+        }
+        
         if (nuevaContratacion != null && nuevaContratacion.getFechaNacimiento()!= null && !nuevaContratacion.getFechaNacimiento().equals("")) {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             fechaNacimiento = formatoFecha.format(nuevaContratacion.getFechaNacimiento());
@@ -193,13 +219,42 @@ public class MeLanbide11DAO {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             fechaFin = formatoFecha.format(nuevaContratacion.getFechaFin());
         }
-        // === NUEVO: preparamos valores (escape de comillas y null-safe) ===
-    String titReq = nuevaContratacion.getTitReqPuesto();
-    titReq = (titReq != null) ? titReq.replace("'", "''") : null;
-    String funciones = nuevaContratacion.getFunciones();
-    funciones = (funciones != null) ? funciones.replace("'", "''") : null;
+        
+        // Escapar todas las cadenas de texto para evitar SQL injection
+        String titReq = nuevaContratacion.getTitReqPuesto();
+        titReq = (titReq != null) ? titReq.replace("'", "''") : null;
+        String funciones = nuevaContratacion.getFunciones();
+        funciones = (funciones != null) ? funciones.replace("'", "''") : null;
+        
+        // Escapar todos los campos de texto
+        String safeNumExp = (nuevaContratacion.getNumExp() != null) ? nuevaContratacion.getNumExp().replace("'", "''") : "";
+        String safeOferta = (nuevaContratacion.getOferta() != null) ? nuevaContratacion.getOferta().replace("'", "''") : "";
+        String safeIdContrato1 = (nuevaContratacion.getIdContrato1() != null) ? nuevaContratacion.getIdContrato1().replace("'", "''") : "";
+        String safeIdContrato2 = (nuevaContratacion.getIdContrato2() != null) ? nuevaContratacion.getIdContrato2().replace("'", "''") : "";
+        String safeDni = (nuevaContratacion.getDni() != null) ? nuevaContratacion.getDni().replace("'", "''") : "";
+        String safeNombre = (nuevaContratacion.getNombre() != null) ? nuevaContratacion.getNombre().replace("'", "''") : "";
+        String safeApellido1 = (nuevaContratacion.getApellido1() != null) ? nuevaContratacion.getApellido1().replace("'", "''") : "";
+        String safeApellido2 = (nuevaContratacion.getApellido2() != null) ? nuevaContratacion.getApellido2().replace("'", "''") : "";
+        String safeSexo = (nuevaContratacion.getSexo() != null) ? nuevaContratacion.getSexo().replace("'", "''") : "";
+        String safeMayor55 = (nuevaContratacion.getMayor55() != null) ? nuevaContratacion.getMayor55().replace("'", "''") : "";
+        String safeFinFormativa = (nuevaContratacion.getFinFormativa() != null) ? nuevaContratacion.getFinFormativa().replace("'", "''") : "";
+        String safeCodFormativa = (nuevaContratacion.getCodFormativa() != null) ? nuevaContratacion.getCodFormativa().replace("'", "''") : "";
+        String safeDenFormativa = (nuevaContratacion.getDenFormativa() != null) ? nuevaContratacion.getDenFormativa().replace("'", "''") : "";
+        String safePuesto = (nuevaContratacion.getPuesto() != null) ? nuevaContratacion.getPuesto().replace("'", "''") : "";
+        String safeOcupacion = (nuevaContratacion.getOcupacion() != null) ? nuevaContratacion.getOcupacion().replace("'", "''") : "";
+        String safeDesOcupacionLibre = (nuevaContratacion.getDesOcupacionLibre() != null) ? nuevaContratacion.getDesOcupacionLibre().replace("'", "''") : "";
+        String safeDesTitulacionLibre = (nuevaContratacion.getDesTitulacionLibre() != null) ? nuevaContratacion.getDesTitulacionLibre().replace("'", "''") : "";
+        String safeTitulacion = (nuevaContratacion.getTitulacion() != null) ? nuevaContratacion.getTitulacion().replace("'", "''") : "";
+        String safeCProfesionalidad = (nuevaContratacion.getcProfesionalidad() != null) ? nuevaContratacion.getcProfesionalidad().replace("'", "''") : "";
+        String safeModalidadContrato = (nuevaContratacion.getModalidadContrato() != null) ? nuevaContratacion.getModalidadContrato().replace("'", "''") : "";
+        String safeJornada = (nuevaContratacion.getJornada() != null) ? nuevaContratacion.getJornada().replace("'", "''") : "";
+        String safeMesesContrato = (nuevaContratacion.getMesesContrato() != null) ? nuevaContratacion.getMesesContrato().replace("'", "''") : "";
+        String safeGrupoCotizacion = (nuevaContratacion.getGrupoCotizacion() != null) ? nuevaContratacion.getGrupoCotizacion().replace("'", "''") : "";
+        String safeDireccionCT = (nuevaContratacion.getDireccionCT() != null) ? nuevaContratacion.getDireccionCT().replace("'", "''") : "";
+        String safeNumSS = (nuevaContratacion.getNumSS() != null) ? nuevaContratacion.getNumSS().replace("'", "''") : "";
+        String safeTipRetribucion = (nuevaContratacion.getTipRetribucion() != null) ? nuevaContratacion.getTipRetribucion().replace("'", "''") : "";
+        
         try {
-
             int id = recogerIDInsertar(ConfigurationParameter.getParameter(ConstantesMeLanbide11.SEQ_MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES), con);
             query = "INSERT INTO " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
                     + "(ID,NUM_EXP,NOFECONT,IDCONT1,IDCONT2,DNICONT,NOMCONT,"
@@ -207,40 +262,40 @@ public class MeLanbide11DAO {
                     + "PUESTOCONT,CODOCUCONT,OCUCONT,DESTITULACION,TITULACION,CPROFESIONALIDAD,MODCONT,JORCONT,PORCJOR,HORASCONV,FECHINICONT,FECHFINCONT,DURCONT,GRSS,DIRCENTRCONT,NSSCONT,CSTCONT,TIPRSB,IMPSUBVCONT,"
                     +  "TITREQPUESTO,FUNCIONES) " 
                     + " VALUES (" + id
-                    + ", '" + nuevaContratacion.getNumExp()
-                    + "', '" + nuevaContratacion.getOferta()
-                    + "', '" + nuevaContratacion.getIdContrato1()
-                    + "', '" + nuevaContratacion.getIdContrato2()
-                    + "', '" + nuevaContratacion.getDni()
-                    + "', '" + nuevaContratacion.getNombre()
-                    + "', '" + nuevaContratacion.getApellido1()
-                    + "', '" + nuevaContratacion.getApellido2()
-                    + "' , TO_DATE('" + fechaNacimiento + "','dd/mm/yyyy')"
-                    + " , " + nuevaContratacion.getEdad()
-                    + " , '" + nuevaContratacion.getSexo()
-                    + "' , '" + nuevaContratacion.getMayor55()
-                    + "' , '" + nuevaContratacion.getFinFormativa()
-                    + "' , '" + nuevaContratacion.getCodFormativa()
-                    + "' , '" + nuevaContratacion.getDenFormativa()
-                    + "', '" + nuevaContratacion.getPuesto()
-                    + "', '" + nuevaContratacion.getOcupacion()
-                    + "', '" + nuevaContratacion.getDesOcupacionLibre()
-                    + "', '" + nuevaContratacion.getDesTitulacionLibre()
-                    + "', '" + nuevaContratacion.getTitulacion()
-                    + "', '" + nuevaContratacion.getcProfesionalidad()
-                    + "', '" + nuevaContratacion.getModalidadContrato()
-                    + "', '" + nuevaContratacion.getJornada()
-                    + "', " + nuevaContratacion.getPorcJornada()
-                    + " , " + nuevaContratacion.getHorasConv()
-                    + " , TO_DATE('" + fechaInicio + "','dd/mm/yyyy')"
-                    + " , TO_DATE('" + fechaFin + "','dd/mm/yyyy')"
-                    + " , '" + nuevaContratacion.getMesesContrato()
-                    + "', '" + nuevaContratacion.getGrupoCotizacion()
-                    + "', '" + nuevaContratacion.getDireccionCT()
-                    + "', '" + nuevaContratacion.getNumSS()
-                    + "', " + nuevaContratacion.getCosteContrato()
-                    + ", '" + nuevaContratacion.getTipRetribucion()
-                    + "'," + nuevaContratacion.getImporteSub()
+                    + ", '" + safeNumExp
+                    + "', '" + safeOferta
+                    + "', '" + safeIdContrato1
+                    + "', '" + safeIdContrato2
+                    + "', '" + safeDni
+                    + "', '" + safeNombre
+                    + "', '" + safeApellido1
+                    + "', '" + safeApellido2
+                    + "', " + (fechaNacimiento.isEmpty() ? "null" : "TO_DATE('" + fechaNacimiento + "','dd/mm/yyyy')")
+                    + ", " + (nuevaContratacion.getEdad() != null ? nuevaContratacion.getEdad() : "null")
+                    + ", '" + safeSexo
+                    + "', '" + safeMayor55
+                    + "', '" + safeFinFormativa
+                    + "', '" + safeCodFormativa
+                    + "', '" + safeDenFormativa
+                    + "', '" + safePuesto
+                    + "', '" + safeOcupacion
+                    + "', '" + safeDesOcupacionLibre
+                    + "', '" + safeDesTitulacionLibre
+                    + "', '" + safeTitulacion
+                    + "', '" + safeCProfesionalidad
+                    + "', '" + safeModalidadContrato
+                    + "', '" + safeJornada
+                    + "', " + (nuevaContratacion.getPorcJornada() != null ? nuevaContratacion.getPorcJornada() : "null")
+                    + ", " + (nuevaContratacion.getHorasConv() != null ? nuevaContratacion.getHorasConv() : "null")
+                    + ", " + (fechaInicio.isEmpty() ? "null" : "TO_DATE('" + fechaInicio + "','dd/mm/yyyy')")
+                    + ", " + (fechaFin.isEmpty() ? "null" : "TO_DATE('" + fechaFin + "','dd/mm/yyyy')")
+                    + ", '" + safeMesesContrato
+                    + "', '" + safeGrupoCotizacion
+                    + "', '" + safeDireccionCT
+                    + "', '" + safeNumSS
+                    + "', " + (nuevaContratacion.getCosteContrato() != null ? nuevaContratacion.getCosteContrato() : "null")
+                    + ", '" + safeTipRetribucion
+                    + "'," + (nuevaContratacion.getImporteSub() != null ? nuevaContratacion.getImporteSub() : "null")
                     + ", " + (titReq != null ? "'" + titReq + "'" : "null")
                     + ", " + (funciones != null ? "'" + funciones + "'" : "null")
                     + ")";
@@ -257,10 +312,8 @@ public class MeLanbide11DAO {
             }
 
         } catch (Exception ex) {
-            //opeCorrecta = false;
             log.debug("Se ha producido un error al insertar una nueva Contrataci�n" + ex.getMessage());
             throw new Exception(ex);
-            //return opeCorrecta;
         } finally {
             if (log.isDebugEnabled()) {
                 log.debug("Procedemos a cerrar el statement");
@@ -277,6 +330,11 @@ public class MeLanbide11DAO {
         String fechaNacimiento = "";
         String fechaInicio = "";
         String fechaFin = "";
+        
+        if (datModif == null) {
+            throw new IllegalArgumentException("Datos de contratación no pueden ser nulos");
+        }
+        
         if (datModif != null && datModif.getFechaNacimiento()!= null && !datModif.getFechaNacimiento().toString().equals("")) {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             fechaNacimiento = formatoFecha.format(datModif.getFechaNacimiento());
@@ -289,50 +347,78 @@ public class MeLanbide11DAO {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             fechaFin = formatoFecha.format(datModif.getFechaFin());
         }
+        
+        // Escapar todas las cadenas de texto para evitar SQL injection
         String titReq = datModif.getTitReqPuesto();
         titReq = (titReq != null) ? titReq.replace("'", "''") : null;
         String funciones = datModif.getFunciones();
         funciones = (funciones != null) ? funciones.replace("'", "''") : null;
-
         
+        // Escapar todos los campos de texto
+        String safeOferta = (datModif.getOferta() != null) ? datModif.getOferta().replace("'", "''") : "";
+        String safeIdContrato1 = (datModif.getIdContrato1() != null) ? datModif.getIdContrato1().replace("'", "''") : "";
+        String safeIdContrato2 = (datModif.getIdContrato2() != null) ? datModif.getIdContrato2().replace("'", "''") : "";
+        String safeDni = (datModif.getDni() != null) ? datModif.getDni().replace("'", "''") : "";
+        String safeNombre = (datModif.getNombre() != null) ? datModif.getNombre().replace("'", "''") : "";
+        String safeApellido1 = (datModif.getApellido1() != null) ? datModif.getApellido1().replace("'", "''") : "";
+        String safeApellido2 = (datModif.getApellido2() != null) ? datModif.getApellido2().replace("'", "''") : "";
+        String safeSexo = (datModif.getSexo() != null) ? datModif.getSexo().replace("'", "''") : "";
+        String safeMayor55 = (datModif.getMayor55() != null) ? datModif.getMayor55().replace("'", "''") : "";
+        String safeFinFormativa = (datModif.getFinFormativa() != null) ? datModif.getFinFormativa().replace("'", "''") : "";
+        String safeCodFormativa = (datModif.getCodFormativa() != null) ? datModif.getCodFormativa().replace("'", "''") : "";
+        String safeDenFormativa = (datModif.getDenFormativa() != null) ? datModif.getDenFormativa().replace("'", "''") : "";
+        String safePuesto = (datModif.getPuesto() != null) ? datModif.getPuesto().replace("'", "''") : "";
+        String safeOcupacion = (datModif.getOcupacion() != null) ? datModif.getOcupacion().replace("'", "''") : "";
+        String safeDesOcupacionLibre = (datModif.getDesOcupacionLibre() != null) ? datModif.getDesOcupacionLibre().replace("'", "''") : "";
+        String safeDesTitulacionLibre = (datModif.getDesTitulacionLibre() != null) ? datModif.getDesTitulacionLibre().replace("'", "''") : "";
+        String safeTitulacion = (datModif.getTitulacion() != null) ? datModif.getTitulacion().replace("'", "''") : "";
+        String safeCProfesionalidad = (datModif.getcProfesionalidad() != null) ? datModif.getcProfesionalidad().replace("'", "''") : "";
+        String safeModalidadContrato = (datModif.getModalidadContrato() != null) ? datModif.getModalidadContrato().replace("'", "''") : "";
+        String safeJornada = (datModif.getJornada() != null) ? datModif.getJornada().replace("'", "''") : "";
+        String safeMesesContrato = (datModif.getMesesContrato() != null) ? datModif.getMesesContrato().replace("'", "''") : "";
+        String safeGrupoCotizacion = (datModif.getGrupoCotizacion() != null) ? datModif.getGrupoCotizacion().replace("'", "''") : "";
+        String safeDireccionCT = (datModif.getDireccionCT() != null) ? datModif.getDireccionCT().replace("'", "''") : "";
+        String safeNumSS = (datModif.getNumSS() != null) ? datModif.getNumSS().replace("'", "''") : "";
+        String safeTipRetribucion = (datModif.getTipRetribucion() != null) ? datModif.getTipRetribucion().replace("'", "''") : "";
+
         try {
             query = "UPDATE " + ConfigurationParameter.getParameter(ConstantesMeLanbide11.MELANBIDE11_CONTRATACION, ConstantesMeLanbide11.FICHERO_PROPIEDADES)
-                    + " SET NOFECONT='" + datModif.getOferta() + "'"
-                    + ", IDCONT1='" + datModif.getIdContrato1() + "'"
-                    + ", IDCONT2='" + datModif.getIdContrato2() + "'"
-                    + ", DNICONT='" + datModif.getDni() + "'"
-                    + ", NOMCONT='" + datModif.getNombre() + "'"
-                    + ", APE1CONT='" + datModif.getApellido1() + "'"
-                    + ", APE2CONT='" + datModif.getApellido2() + "'"
-                    + ", FECHNACCONT=TO_DATE('" + fechaNacimiento + "','dd/mm/yyyy')"
-                    + ", EDADCONT=" + datModif.getEdad()
-                    + ", SEXOCONT='" + datModif.getSexo() + "'"
-                    + ", MAY55CONT='" + datModif.getMayor55() + "'"
-                    + ", ACCFORCONT='" + datModif.getFinFormativa() + "'"
-                    + ", CODFORCONT='" + datModif.getCodFormativa() + "'"
-                    + ", DENFORCONT='" + datModif.getDenFormativa() + "'"
-                    + ", PUESTOCONT='" + datModif.getPuesto() + "'"
-                    + ", CODOCUCONT='" + datModif.getOcupacion() + "'"
-                    + ", OCUCONT='" + datModif.getDesOcupacionLibre() + "'"
-                    + ", DESTITULACION='" + datModif.getDesTitulacionLibre()+ "'"
-                    + ", TITULACION='" + datModif.getTitulacion()+ "'"
-                    + ", CPROFESIONALIDAD='" + datModif.getcProfesionalidad()+ "'"
-                    + ", MODCONT='" + datModif.getModalidadContrato() + "'"
-                    + ", JORCONT='" + datModif.getJornada() + "'"
-                    + ", PORCJOR=" + datModif.getPorcJornada()
-                    + ", HORASCONV=" + datModif.getHorasConv()
-                    + ", FECHINICONT=TO_DATE('" + fechaInicio + "','dd/mm/yyyy')"
-                    + ", FECHFINCONT=TO_DATE('" + fechaFin + "','dd/mm/yyyy')"
-                    + ", DURCONT='" + datModif.getMesesContrato() + "'"
-                    + ", GRSS='" + datModif.getGrupoCotizacion() + "'"
-                    + ", DIRCENTRCONT='" + datModif.getDireccionCT() + "'"
-                    + ", NSSCONT='" + datModif.getNumSS() + "'"
-                    + ", CSTCONT=" + datModif.getCosteContrato()
-                    + ", TIPRSB='" + datModif.getTipRetribucion()+ "'"
-                    + ", IMPSUBVCONT=" + datModif.getImporteSub()
+                    + " SET NOFECONT='" + safeOferta + "'"
+                    + ", IDCONT1='" + safeIdContrato1 + "'"
+                    + ", IDCONT2='" + safeIdContrato2 + "'"
+                    + ", DNICONT='" + safeDni + "'"
+                    + ", NOMCONT='" + safeNombre + "'"
+                    + ", APE1CONT='" + safeApellido1 + "'"
+                    + ", APE2CONT='" + safeApellido2 + "'"
+                    + (fechaNacimiento.isEmpty() ? ", FECHNACCONT=null" : ", FECHNACCONT=TO_DATE('" + fechaNacimiento + "','dd/mm/yyyy')")
+                    + ", EDADCONT=" + (datModif.getEdad() != null ? datModif.getEdad() : "null")
+                    + ", SEXOCONT='" + safeSexo + "'"
+                    + ", MAY55CONT='" + safeMayor55 + "'"
+                    + ", ACCFORCONT='" + safeFinFormativa + "'"
+                    + ", CODFORCONT='" + safeCodFormativa + "'"
+                    + ", DENFORCONT='" + safeDenFormativa + "'"
+                    + ", PUESTOCONT='" + safePuesto + "'"
+                    + ", CODOCUCONT='" + safeOcupacion + "'"
+                    + ", OCUCONT='" + safeDesOcupacionLibre + "'"
+                    + ", DESTITULACION='" + safeDesTitulacionLibre + "'"
+                    + ", TITULACION='" + safeTitulacion + "'"
+                    + ", CPROFESIONALIDAD='" + safeCProfesionalidad + "'"
+                    + ", MODCONT='" + safeModalidadContrato + "'"
+                    + ", JORCONT='" + safeJornada + "'"
+                    + ", PORCJOR=" + (datModif.getPorcJornada() != null ? datModif.getPorcJornada() : "null")
+                    + ", HORASCONV=" + (datModif.getHorasConv() != null ? datModif.getHorasConv() : "null")
+                    + (fechaInicio.isEmpty() ? ", FECHINICONT=null" : ", FECHINICONT=TO_DATE('" + fechaInicio + "','dd/mm/yyyy')")
+                    + (fechaFin.isEmpty() ? ", FECHFINCONT=null" : ", FECHFINCONT=TO_DATE('" + fechaFin + "','dd/mm/yyyy')")
+                    + ", DURCONT='" + safeMesesContrato + "'"
+                    + ", GRSS='" + safeGrupoCotizacion + "'"
+                    + ", DIRCENTRCONT='" + safeDireccionCT + "'"
+                    + ", NSSCONT='" + safeNumSS + "'"
+                    + ", CSTCONT=" + (datModif.getCosteContrato() != null ? datModif.getCosteContrato() : "null")
+                    + ", TIPRSB='" + safeTipRetribucion + "'"
+                    + ", IMPSUBVCONT=" + (datModif.getImporteSub() != null ? datModif.getImporteSub() : "null")
                     + ", TITREQPUESTO=" + (titReq != null ? "'" + titReq + "'" : "null")
                     + ", FUNCIONES=" + (funciones != null ? "'" + funciones + "'" : "null")
-                    + " WHERE ID=" + datModif.getId();
+                    + " WHERE ID=" + (datModif.getId() != null ? datModif.getId() : "null");
             if (log.isDebugEnabled()) {
                 log.debug("sql = " + query);
             }
